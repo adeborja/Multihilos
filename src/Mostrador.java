@@ -18,16 +18,16 @@ public class Mostrador {
         semaphore = new Semaphore(1, true);
     }
 
-    public int cajasDisponibles()
+    public synchronized int cajasDisponibles()
     {
         return mostrador.size();
     }
 
-    public void ponerCaja() throws InterruptedException {
+    public boolean ponerCaja() throws InterruptedException {
         boolean haSidoAnadida = false;
 
-        while (!haSidoAnadida)
-        {
+        //while (!haSidoAnadida)
+        //{
             //Si hay sitio en el mostrador para colocar una caja
             if(cajasDisponibles() < 5)
             {
@@ -38,31 +38,32 @@ public class Mostrador {
 
                 System.out.println("Se ha colocado una caja. Ahora hay "+cajasDisponibles());
 
-                synchronized (mostrador)
+                /*synchronized (mostrador)
                 {
                     mostrador.notify();
-                }
+                }*/
 
-                //mostradorOcupado = false;
                 semaphore.release();
             }
             //Si el mostrador esta lleno
             else
             {
                 System.out.println("El mostrador esta lleno. Se esperará para colocar una caja");
-                synchronized (mostrador)
+                /*synchronized (mostrador)
                 {
                     mostrador.wait();
-                }
+                }*/
             }
-        }
+        //}
+
+        return haSidoAnadida;
     }
 
-    public void cogerCaja() throws InterruptedException {
+    public boolean cogerCaja() throws InterruptedException {
         boolean haSidoCogida= false;
 
-        while (!haSidoCogida)
-        {
+        //while (!haSidoCogida)
+        //{
             //Si hay alguna caja mostrador
             if(cajasDisponibles() > 0)
             {
@@ -73,23 +74,25 @@ public class Mostrador {
 
                 System.out.println("Se ha cogido una caja. Ahora hay "+cajasDisponibles());
 
-                synchronized (mostrador)
+                /*synchronized (mostrador)
                 {
                     mostrador.notify();
-                }
+                }*/
 
-                //mostradorOcupado = false;
+
                 semaphore.release();
             }
             //Si el mostrador esta vacio
             else
             {
                 System.out.println("El mostrador esta vacío. Se esperará para coger una caja");
-                synchronized (mostrador)
+                /*synchronized (mostrador)
                 {
                     mostrador.wait();
-                }
+                }*/
             }
-        }
+        //}
+
+        return haSidoCogida;
     }
 }

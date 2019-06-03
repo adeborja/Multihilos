@@ -6,8 +6,9 @@ public class Ejecutar {
     public static void main(String[] args)
     {
         Mostrador mostrador = new Mostrador();
-        Productor productor = new Productor(mostrador);
-        Consumidor consumidor = new Consumidor(mostrador);
+        MyWaitNotify mwn = new MyWaitNotify();
+        Productor productor = new Productor(mostrador, mwn);
+        Consumidor consumidor = new Consumidor(mostrador, mwn);
 
         Thread t1 = new Thread(productor);
         Thread t2 = new Thread(consumidor);

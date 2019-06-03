@@ -8,15 +8,19 @@ public class Consumidor implements Runnable{
 
     private Random random;
     private Mostrador mos;
+    private MyWaitNotify senalizador;
 
-    public Consumidor(Mostrador m)
+    public Consumidor(Mostrador m, MyWaitNotify s)
     {
         random = new Random();
         mos = m;
+        senalizador = s;
     }
 
 
     public void obtenerCaja() throws InterruptedException {
+        boolean haSidoAnadida = false;
+
         long espera = random.nextInt(6000);
         //if (espera < 1000) espera=1000;
         //else if(espera>3000) espera=3000;
@@ -25,8 +29,20 @@ public class Consumidor implements Runnable{
 
         TimeUnit.MILLISECONDS.sleep(espera);
 
-        //obtener caja
-        mos.cogerCaja();
+        while (!haSidoAnadida)
+        {
+            //obtener caja
+            haSidoAnadida = mos.cogerCaja();
+
+            if(!haSidoAnadida)
+            {
+                senalizador.doWaitCoger();
+            }
+            else
+            {
+                senalizador.doNotifyCoger();
+            }
+        }
     }
 
     @Override
